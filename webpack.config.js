@@ -4,6 +4,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CleanPlugin = require('clean-webpack-plugin');
 
+var extractCSS = new ExtractTextPlugin('stylesheets/[name].[contenthash].css');
 
 module.exports = {
     context: path.resolve(__dirname, "app"),
@@ -23,15 +24,19 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
+                use: extractCSS.extract({
                     fallback: 'style-loader',
                     use: ['css-loader', 'postcss-loader']
                 })
+            },
+            {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader']
             }
         ]
     },
     plugins: [
-        new ExtractTextPlugin("styles.css"),
+        extractCSS,
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: './index.html'
